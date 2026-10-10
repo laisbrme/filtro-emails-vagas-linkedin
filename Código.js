@@ -5,10 +5,18 @@ function extrairVagasLinkedIn() {
   
   // 2. LISTA DE PALAVRAS PARA IGNORAR
   var palavrasIgnoradas = [
+    // Senioridade
     "estágio", "estagiário", "estagiária", "internship", 
     "sênior", "senior", "sr", "sr.", "especialista", "lead",
+
+    // Tipo de vaga
     "exclusiva para pessoas com deficiência",
-    "banco de talentos"
+    "banco de talentos",
+    
+    // Localização
+    "alemanha", "berlim", 
+    "SP (híbrido)", "MG (híbrido)", "MT (híbrido)", "SC (híbrido)", "AM (híbrido)", "PR (híbrido)", "PE (híbrido)", "RJ (híbrido)", 
+    "SP (presencial)", "MG (presencial)", "MT (presencial)", "SC (presencial)", "AM (presencial)", "PR (presencial)", "PE (presencial)", "RJ (presencial)",
   ];
 
   // 3. VERIFICA LINKS EXISTENTES NA PLANILHA PARA EVITAR DUPLICATAS
@@ -76,8 +84,9 @@ function extrairVagasLinkedIn() {
         }
       }
     }
-
-    // 9. MARCA O E-MAIL COMO LIDO APÓS PROCESSAR
-    threads[i].markRead();
+    // Marca o e-mail como lido:
+    // threads[i].markRead();
+    // Deleta o e-mail depois de lido:
+    threads[i].moveToTrash();    
   }
 }
