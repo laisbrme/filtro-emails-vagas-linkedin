@@ -11,6 +11,7 @@ function extrairVagasLinkedIn() {
     "sênior", "senior", "sr", "especialista", "lead",
     // Tipo de vaga
     "exclusiva para pessoas com deficiência",
+    "exclusiva para PCD",
     "banco de talentos"
   ];
 
