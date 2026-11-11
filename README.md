@@ -25,6 +25,7 @@
     *   [Passo 1: Preparar a Planilha](#passo-1-preparar-a-planilha)
     *   [Passo 2: Configurar o Script](#passo-2-configurar-o-script)
     *   [Passo 3: Automatizar com Gatilhos](#passo-3-automatizar-com-gatilhos)
+*   [🎨 Verificador de Vagas Encerradas](#-verificador-de-vagas-encerradas)
 *   [📈 Status do Projeto](#-status-do-projeto)
 *   [📝 Licença](#-licença)
 *   [✍️ Autor](#-autor)
@@ -45,10 +46,11 @@ O processo é totalmente automatizado, evitando vagas duplicadas e filtrando pos
 
 *   **🔍 Leitura Inteligente:** Busca e processa apenas e-mails não lidos de alertas de vagas do LinkedIn.
 *   **📊 Extração de Dados:** Captura automaticamente o título da vaga, nome da empresa, localização e o link direto para a candidatura.
-*   **🚫 Filtro de Palavras-Chave:** Permite criar uma lista de termos (ex: "estágio", "sênior") para ignorar vagas que não são do seu interesse.
+*   **🚫 Filtro Inteligente:** Ignora vagas por palavras do título (ex: "estágio", "sênior", casando só a palavra inteira) e por local (ex: "SP (híbrido)"), sem diferenciar maiúsculas ou acentos.
+*   **🎨 Verificação de Vagas Encerradas:** Confere os links da planilha e pinta cada linha de vermelho, verde ou amarelo conforme a situação da vaga.
 *   **✔️ Anti-Duplicidade:** Verifica se o link da vaga já existe na planilha antes de adicioná-lo, garantindo uma lista sempre limpa.
 *   **🤖 Automação Completa:** Após configurado, o script pode rodar sozinho em intervalos de tempo definidos (ex: a cada hora, uma vez por dia).
-*   **🧹 Organização:** Marca os e-mails como lidos no Gmail após o processamento, mantendo sua caixa de entrada organizada.
+*   **🧹 Organização:** Move os e-mails de alerta para a lixeira do Gmail após o processamento, mantendo sua caixa de entrada limpa. (E-mails na lixeira são apagados pelo Gmail após 30 dias.)
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -78,7 +80,7 @@ Siga o passo a passo abaixo para configurar a automação na sua própria conta 
 
 1.  Na sua planilha, vá até o menu `Extensões` > `Apps Script`.
 2.  O editor de script será aberto em uma nova aba. Apague todo o conteúdo que vier por padrão.
-3.  Copie o código do arquivo `Código.js` e cole no editor.
+3.  Copie o código do arquivo `extrairVagasLinkedIn.gs` e cole no editor.
 4.  Clique no ícone de **Salvar projeto** (💾).
 5.  Para testar e conceder as permissões, clique em **Executar**. A primeira execução solicitará autorização:
     *   Clique em `Revisar permissões` e escolha sua conta Google.
@@ -102,9 +104,39 @@ Para que o script rode sozinho, crie um "acionador" (gatilho):
 
 Pronto! A automação está configurada e irá rodar automaticamente no intervalo que você definiu.
 
+## 🎨 Verificador de Vagas Encerradas
+
+Depois que as vagas estão na planilha, o verificador abre cada link da coluna **E** e colore a linha de acordo com a situação da vaga.
+
+| Cor | Significado |
+|-----|-------------|
+| 🔴 Vermelho | Vaga encerrada ou removida (não é reverificada) |
+| 🟢 Verde | A página carregou e o título da vaga (coluna **D**) foi encontrado |
+| 🟡 Amarelo | Não foi possível verificar (bloqueio, erro ou página inesperada) |
+
+### Como usar
+
+1.  No mesmo projeto do Apps Script, adicione os arquivos `verificarVagasEncerradas.gs` e `diagnosticarPrimeiroLink.gs` (o botão `+` ao lado de **Arquivos**).
+2.  Selecione a função `verificarVagasEncerradas` e clique em **Executar**.
+3.  Se o script parar por limite de tempo (~5 min), execute novamente: ele continua pelas linhas que ainda não têm cor.
+
+O verificador espera o **título da vaga na coluna D** e o **link na coluna E**, como no Passo 1.
+
+### Solução de problemas
+
+Se muitas linhas ficarem amarelas, execute `diagnosticarPrimeiroLink` e consulte o resultado em **Execuções**. O código HTTP `429` indica que o LinkedIn está limitando as requisições.
+
+> ⚠️ **Limitações:**
+> - O LinkedIn pode bloquear requisições automatizadas (erro 429). Quando isso acontece, a linha fica amarela, que significa "não foi possível verificar" e nunca "vaga aberta".
+> - 🟢 verde indica que a página carregou e o título da vaga foi encontrado, mas não garante que a vaga ainda aceite candidaturas. Confira antes de se candidatar.
+> - O funcionamento depende dos textos e do comportamento atuais do LinkedIn, que podem mudar sem aviso.
+> - A consulta automatizada pode contrariar os termos de uso do LinkedIn. Use por sua conta e risco, com moderação, de preferência de forma manual ou espaçada, e não em um acionador frequente.
+
 ## 📈 Status do Projeto
 
-✔️ **Concluído:** O projeto está finalizado e totalmente funcional. Não há planos para novas funcionalidades, mas correções de bugs serão bem-vindas.
+✔️ **Concluído:** O projeto está finalizado e funcional. Não há planos para novas funcionalidades, mas correções de bugs serão bem-vindas.
+
+> ⚠️ **Aviso:** o verificador de vagas encerradas depende de como o LinkedIn responde a requisições automatizadas, algo que está fora do controle deste projeto e pode mudar a qualquer momento. Veja as limitações na seção [Verificador de Vagas Encerradas](#-verificador-de-vagas-encerradas).
 
 ## 📝 Licença
 
@@ -114,4 +146,4 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.txt](LICENSE.txt)
 
 **Laís Brum**
 
-[LinkedIn](https://www.linkedin.com/in/lais-brum/) | [GitHub](https://github.com/laisbrum) | [E-mail](mailto:eng.laisbm@gmail.com)
+[LinkedIn](https://www.linkedin.com/in/lais-brum/) | [GitHub](https://github.com/laisbrme) | [E-mail](mailto:eng.laisbm@gmail.com)
