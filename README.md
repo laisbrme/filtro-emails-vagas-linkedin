@@ -48,6 +48,7 @@ O processo é totalmente automatizado, evitando vagas duplicadas e filtrando pos
 *   **📊 Extração de Dados:** Captura automaticamente o título da vaga, nome da empresa, localização e o link direto para a candidatura.
 *   **🚫 Filtro Inteligente:** Ignora vagas por palavras do título (ex: "estágio", "sênior", casando só a palavra inteira) e por local (ex: "SP (híbrido)"), sem diferenciar maiúsculas ou acentos.
 *   **🎨 Verificação de Vagas Encerradas:** Confere os links da planilha e pinta cada linha de vermelho, verde ou amarelo conforme a situação da vaga.
+*   **⚡ Candidatura Simplificada:** Identifica se a vaga usa a candidatura simplificada do LinkedIn.
 *   **✔️ Anti-Duplicidade:** Verifica se o link da vaga já existe na planilha antes de adicioná-lo, garantindo uma lista sempre limpa.
 *   **🤖 Automação Completa:** Após configurado, o script pode rodar sozinho em intervalos de tempo definidos (ex: a cada hora, uma vez por dia).
 *   **🧹 Organização:** Move os e-mails de alerta para a lixeira do Gmail após o processamento, mantendo sua caixa de entrada limpa. (E-mails na lixeira são apagados pelo Gmail após 30 dias.)
@@ -74,6 +75,7 @@ Siga o passo a passo abaixo para configurar a automação na sua própria conta 
     *   `C1`: **LOCAL**
     *   `D1`: **VAGA**
     *   `E1`: **LINK**
+    *   `F1`: **CANDIDATURA SIMPLIFICADA** (preenchida pelo verificador opcional)
 3.  Renomeie a aba da planilha para `Página1` ou, se preferir outro nome, lembre-se de atualizá-lo na primeira linha do código-fonte.
 
 ### Passo 2: Configurar o Script
@@ -131,6 +133,19 @@ Se muitas linhas ficarem amarelas, execute `diagnosticarPrimeiroLink` e consulte
 > - 🟢 verde indica que a página carregou e o título da vaga foi encontrado, mas não garante que a vaga ainda aceite candidaturas. Confira antes de se candidatar.
 > - O funcionamento depende dos textos e do comportamento atuais do LinkedIn, que podem mudar sem aviso.
 > - A consulta automatizada pode contrariar os termos de uso do LinkedIn. Use por sua conta e risco, com moderação, de preferência de forma manual ou espaçada, e não em um acionador frequente.
+
+## ⚡ Verificador de candidatura simplificada
+
+Adicione o arquivo `verificarCandidaturaSimplificada.gs` ao mesmo projeto do Apps Script e execute a função `verificarCandidaturaSimplificada`.
+O script consulta o link da vaga na coluna **E** e registra o resultado na coluna **F**:
+
+| Resultado | Significado |
+|-----------|-------------|
+| `SIM` | A página informou “Candidatura simplificada” (ou “Easy Apply”). |
+| `NÃO` | A página exibiu um botão de candidatura comum. |
+| `NÃO VERIFICADO` | O LinkedIn bloqueou a consulta, retornou erro ou uma página inesperada. |
+
+Por padrão, resultados `SIM` e `NÃO` não são consultados de novo. Para revalidar todos, altere `REVERIFICAR_TODAS` para `true` no início do arquivo.
 
 ## 📈 Status do Projeto
 
